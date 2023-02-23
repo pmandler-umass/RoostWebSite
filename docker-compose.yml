@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  roost_backend:
+    container_name: roost-backend
+    build:
+      dockerfile: Dockerfile
+      context: backend
+    environment:
+      - GUNICORN_CMD_ARGS=--reload
+      - MONGO_URI=mongodb://root:password@roost_db:27017
+    volumes:
+      - "./backend/src:/app/src"
+    ports:
+      - "5001:5001"
+  roost_frontend:
+    container_name: roost-frontend
+    build:
+      dockerfile: Dockerfile
+      context: frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+  roost_db:
+    container_name: roost-db
+    command: mongod --quiet --logpath /dev/null
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - roost_db_vol:/data/db
+volumes:
+  roost_db_vol:

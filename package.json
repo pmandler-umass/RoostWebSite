@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native": "^0.71.3",
+    "react-native-canvas": "^0.1.38"
+  }
+}
